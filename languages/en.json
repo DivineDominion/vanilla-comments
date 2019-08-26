@@ -1,0 +1,7 @@
+{
+    "plugin-data":
+    {
+        "name": "Vanilla Comment Plugin",
+        "description": "Enable comments for pages powered by your Vanilla Forums intance. (Required to run separately.)"
+    }
+}
