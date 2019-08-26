@@ -92,4 +92,85 @@ class VanillaCommentsPlugin extends Plugin {
     return $html;
   }
 
+  public function siteBodyBegin(){
+    if ($this->commentPosition() !== "siteBodyBegin") {
+      return false;
+    }
+    $result = $this->renderComments();
+    if ($result === false) {
+      return false;
+    }
+    print($result);
+  }
+
+  public function pageBegin(){
+    if ($this->commentPosition() !== "pageBegin") {
+      return false;
+    }
+    $result = $this->renderComments();
+    if ($result === false) {
+      return false;
+    }
+    print($result);
+  }
+
+  public function pageEnd(){
+    if ($this->commentPosition() !== "pageEnd") {
+      return false;
+    }
+    $result = $this->renderComments();
+    if ($result === false) {
+      return false;
+    }
+    print($result);
+  }
+
+  public function siteBodyEnd(){
+    if ($this->commentPosition() !== "siteBodyEnd") {
+      return false;
+    }
+    $result = $this->renderComments();
+    if ($result === false) {
+      return false;
+    }
+    print($result);
+  }
+
+  private function renderComments() {
+    global $page;
+
+    if (!$page->allowComments() || $this->forumURL() === false) {
+      return false;
+    }
+
+    ob_start();
+    ?>
+      <div id="vanilla-comments"></div>
+      <script type="text/javascript">
+          /*** Required Settings: Edit BEFORE pasting into your web page ***/
+          var vanilla_forum_url = '<?= $this->forumURL();?>'; // The full http url & path to your vanilla forum
+          var vanilla_identifier = '<?= $page->permalink() ?>'; // Your unique identifier for the content being commented on
+
+          /*** Optional Settings: Ignore if you like ***/
+          // var vanilla_discussion_id = ''; // Attach this page of comments to a specific Vanilla DiscussionID.
+          // var vanilla_category_id = ''; // Create this discussion in a specific Vanilla CategoryID.
+
+          /*** DON'T EDIT BELOW THIS LINE ***/
+          (function() {
+              var vanilla = document.createElement('script');
+              vanilla.type = 'text/javascript';
+              var timestamp = new Date().getTime();
+              vanilla.src = vanilla_forum_url + '/js/embed.js';
+              (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(vanilla);
+          })();
+      </script>
+      <noscript>
+          Please enable JavaScript to view the <a href="http://vanillaforums.com/?ref_noscript">comments powered by Vanilla.</a>
+      </noscript>
+    <?php
+    $content = ob_get_contents();
+    ob_end_clean();
+
+    return $content;
+  }
 }
