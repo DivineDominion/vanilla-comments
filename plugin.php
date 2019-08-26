@@ -7,6 +7,7 @@ class VanillaCommentsPlugin extends Plugin {
     $this->dbFields = array(
       "position" => "pageEnd",
       "forum_url" => "",
+      "category_id" => ""
     );
   }
 
@@ -16,6 +17,14 @@ class VanillaCommentsPlugin extends Plugin {
 
   private function forumURL() {
     $result = $this->getValue('forum_url');
+    if (trim($result) === '') {
+      return false;
+    }
+    return $result;
+  }
+
+  private function categoryID() {
+    $result = $this->getValue('category_id');
     if (trim($result) === '') {
       return false;
     }
@@ -75,6 +84,12 @@ class VanillaCommentsPlugin extends Plugin {
     $html .= '<label>'.$L->get('Forum URL').'</label>';
     $html .= '<input name="forum_url" value="'.$this->getValue('forum_url').'">';
     $html .= '<span class="tip">'.$L->get('The full URL to your Vanilla Forum.').'</span>';
+    $html .= '</div>';
+
+    $html .= '<div>';
+    $html .= '<label>'.$L->get('Category ID').'</label>';
+    $html .= '<input name="category_id" value="'.$this->getValue('category_id').'">';
+    $html .= '<span class="tip">'.$L->get('Optional. Specify the forum category ID where new discussions should be posted to. You can create a "Blog" category in your forum and have all comments grouped there, for example. Copy the ID from your broeser\'s address bar when you edit a category in the Vanilla Forums dashboard, e.g. example-forum.com/vanilla/settings/editcategory?categoryid=6 yields the ID "6". Leave empty to use the forum default.').'</span>';
     $html .= '</div>';
 
     $html .= '<div>';
@@ -153,7 +168,10 @@ class VanillaCommentsPlugin extends Plugin {
 
           /*** Optional Settings: Ignore if you like ***/
           // var vanilla_discussion_id = ''; // Attach this page of comments to a specific Vanilla DiscussionID.
-          // var vanilla_category_id = ''; // Create this discussion in a specific Vanilla CategoryID.
+          <?php if ($this->categoryID() !== false): ?>
+          // Create this discussion in a specific Vanilla CategoryID.
+          var vanilla_category_id = '<?= $this->categoryID(); ?>';
+          <?php endif; ?>
 
           /*** DON'T EDIT BELOW THIS LINE ***/
           (function() {
