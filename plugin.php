@@ -107,7 +107,7 @@ class VanillaCommentsPlugin extends Plugin {
     return $html;
   }
 
-  public function siteBodyBegin(){
+  public function siteBodyBegin() {
     if ($this->commentPosition() !== "siteBodyBegin") {
       return false;
     }
@@ -118,7 +118,7 @@ class VanillaCommentsPlugin extends Plugin {
     print($result);
   }
 
-  public function pageBegin(){
+  public function pageBegin() {
     if ($this->commentPosition() !== "pageBegin") {
       return false;
     }
@@ -129,7 +129,7 @@ class VanillaCommentsPlugin extends Plugin {
     print($result);
   }
 
-  public function pageEnd(){
+  public function pageEnd() {
     if ($this->commentPosition() !== "pageEnd") {
       return false;
     }
@@ -140,7 +140,7 @@ class VanillaCommentsPlugin extends Plugin {
     print($result);
   }
 
-  public function siteBodyEnd(){
+  public function siteBodyEnd() {
     if ($this->commentPosition() !== "siteBodyEnd") {
       return false;
     }
@@ -153,6 +153,11 @@ class VanillaCommentsPlugin extends Plugin {
 
   private function renderComments() {
     global $page;
+    global $url;
+
+    if ($url->whereAmI() !== 'page') {
+      return false;
+    }
 
     if (!$page->allowComments() || $this->forumURL() === false) {
       return false;
