@@ -1,7 +1,7 @@
 # Vanilla Comments plugin
 
 [![Bludit](https://img.shields.io/badge/Bludit-v3.9.2-0078D4.svg?style=flat-square)](https://www.bludit.com)
-[![Vanilla Forums](https://img.shields.io/badge/Vanilla-v2.9-0078D4.svg?style=flat-square)][vanilla]
+[![Vanilla Forums](https://img.shields.io/badge/Vanilla-v2.x/v3.x-0078D4.svg?style=flat-square)][vanilla]
 ![Version](https://img.shields.io/github/tag/DivineDominion/vanilla-comments.svg?style=flat)
 ![License](https://img.shields.io/github/license/DivineDominion/vanilla-comments.svg?style=flat)
 
@@ -16,7 +16,7 @@ Use your existing [Vanilla Forum][vanilla] to embed comments on pages in your Bl
 
 ## Requirements
 
-- Vanilla Forum v2.9+ with the [embed settings enabled](https://docs.vanillaforums.com/help/embedding/)
+- Vanilla Forum v2.x and v3.x with the [embed settings enabled](https://docs.vanillaforums.com/help/embedding/)
 - Bludit v3.5.0+
 
 ## Installation
