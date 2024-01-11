@@ -43,6 +43,14 @@ class VanillaCommentsPlugin extends Plugin {
     return $result;
   }
 
+  private function vanillaIdentifier($page) {
+    $result = trim($page->custom('customVanillaIdentifier') ?: '');
+    if ($result === '') {
+      return $page->permalink();
+    }
+    return $result;
+  }
+
   private function customDiscussionID($page) {
     $result = trim($page->custom('customDiscussionID') ?: '');
     if ($result === '') {
@@ -189,7 +197,7 @@ class VanillaCommentsPlugin extends Plugin {
       <script type="text/javascript">
           /*** Required Settings ***/
           var vanilla_forum_url = '<?= $this->forumURL();?>'; // The full http url & path to your vanilla forum
-          var vanilla_identifier = '<?= $page->permalink() ?>'; // Your unique identifier for the content being commented on
+          var vanilla_identifier = '<?= $this->vanillaIdentifier($page) ?>'; // Your unique identifier for the content being commented on
 
           /*** Optional Settings ***/
           <?php if ($this->customDiscussionID($page) !== false): ?>
