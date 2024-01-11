@@ -1,5 +1,17 @@
 <?php defined('BLUDIT') or die('Bludit CMS.');
 
+/**
+ * Add a custom field https://docs.bludit.com/en/content/custom-fields to enable discussion ID overrides:
+ *
+ * ```json
+ *  "customDiscussionID": {
+ *  "type": "string",
+ *  "label": "Forum Discussion ID Override",
+ *  "placeholder": "(Optional: Existing forum discussion ID)",
+ *  "tip": "<b>Leave empty to auto-generate discussions!</b> Attach to a pre-existing discussion. Copy the number in the URL of an existing discussion like <code>123</code> in <code>forum.example.com/discussion/123/...</code>."
+ * }
+ * ```
+ */
 class VanillaCommentsPlugin extends Plugin {
 
   /** Plugin init hook. */
@@ -31,8 +43,8 @@ class VanillaCommentsPlugin extends Plugin {
     return $result;
   }
 
-  private function customDiscussionID() {
-    $result = trim($this->getValue('customDiscussionID') ?: '');
+  private function customDiscussionID($page) {
+    $result = trim($page->custom('customDiscussionID') ?: '');
     if ($result === '') {
       return false;
     }
@@ -63,18 +75,9 @@ class VanillaCommentsPlugin extends Plugin {
               '0' => $L->g('Disallow Comments')
             )
           )); ?>';
-          var DISCUSSION_ID_OVERRIDE_FIELD = '<?= preg_replace('/\s+/', ' ', trim(Bootstrap::formInputTextBlock(array(
-            'name'        => 'customDiscussionID',
-            'type'        => 'text',
-            'value'       => (!$page) ? '' : ($page->getValue('customDiscussionID') ?: ''),
-            'class'       => '',
-            'placeholder' => $L-g('(Optional: Existing forum discussion ID)'),
-            'tip'         => $L->g('<b>Leave empty to auto-generate discussions!</b> Attach to a pre-existing discussion. Copy the number in the URL of an existing discussion like <code>123</code> in <code>forum.example.com/discussion/123/...</code>.'),
-          )))); ?>';
           d.addEventListener("DOMContentLoaded", function(){
             if(d.querySelector("#jscategory")){
               var form = d.querySelector("#jscategory").parentElement;
-              form.insertAdjacentHTML("afterend", DISCUSSION_ID_OVERRIDE_FIELD);
               form.insertAdjacentHTML("afterend", HANDLE_COMMENTS_FIELD);
             }
           });
@@ -184,14 +187,16 @@ class VanillaCommentsPlugin extends Plugin {
     ?>
       <div id="vanilla-comments"></div>
       <script type="text/javascript">
-          /*** Required Settings: Edit BEFORE pasting into your web page ***/
+          /*** Required Settings ***/
           var vanilla_forum_url = '<?= $this->forumURL();?>'; // The full http url & path to your vanilla forum
           var vanilla_identifier = '<?= $page->permalink() ?>'; // Your unique identifier for the content being commented on
 
-          /*** Optional Settings: Ignore if you like ***/
-          <?php if ($this->customDiscussionID() !== false) ?>
-          var vanilla_discussion_id = '<?= $this->customDiscussionID(); ?>'; // Attach this page of comments to a specific Vanilla DiscussionID.
+          /*** Optional Settings ***/
+          <?php if ($this->customDiscussionID($page) !== false): ?>
+          // Attach this page of comments to a specific Vanilla DiscussionID.
+          var vanilla_discussion_id = '<?= $this->customDiscussionID($page); ?>';
           <?php endif; ?>
+
           <?php if ($this->categoryID() !== false): ?>
           // Create this discussion in a specific Vanilla CategoryID.
           var vanilla_category_id = '<?= $this->categoryID(); ?>';
